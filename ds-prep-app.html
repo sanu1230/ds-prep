@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d0d1a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DS Prep">
+<title>DS Prep</title>
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%230d0d1a'/%3E%3Ctext x='90' y='118' font-size='90' text-anchor='middle' fill='%2390c0ff' font-family='monospace' font-weight='bold'%3EDS%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href='data:application/manifest+json,{"name":"DS Interview Prep","short_name":"DS Prep","start_url":".","display":"standalone","background_color":"%230d0d1a","theme_color":"%230d0d1a","icons":[{"src":"data:image/svg+xml,%253Csvg xmlns=%2527http://www.w3.org/2000/svg%2527 viewBox=%25270 0 180 180%2527%253E%253Crect width=%2527180%2527 height=%2527180%2527 rx=%252740%2527 fill=%2527%25230d0d1a%2527/%253E%253Ctext x=%252790%2527 y=%2527118%2527 font-size=%252790%2527 text-anchor=%2527middle%2527 fill=%2527%252390c0ff%2527 font-family=%2527monospace%2527 font-weight=%2527bold%2527%253EDS%253C/text%253E%253C/svg%253E","sizes":"180x180","type":"image/svg+xml"}]}'>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { margin: 0; background: #0d0d1a; color: #d0d0f0; font-family: 'IBM Plex Mono', ui-monospace, 'Courier New', monospace; padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); }
+  #app { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+  h1 { font-size: 20px; font-weight: 700; margin: 0; }
+  a { text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  .eyebrow { font-size: 10px; color: #6c6c9c; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+  .row { display: flex; justify-content: space-between; align-items: flex-end; }
+  .bar { margin-top: 12px; height: 3px; background: #13131f; border-radius: 2px; overflow: hidden; }
+  .bar > div { height: 100%; background: #3b5bdb; border-radius: 2px; transition: width .4s; }
+  .meta { display: flex; gap: 16px; margin-top: 6px; }
+  .meta span { font-size: 11px; color: #6c6c9c; }
+  .legend { display: flex; gap: 14px; margin: 18px 0; flex-wrap: wrap; }
+  .legend span { font-size: 11px; }
+  .weekhdr { font-size: 10px; color: #4a6fa5; letter-spacing: 2px; text-transform: uppercase; margin: 24px 0 10px; padding-bottom: 6px; border-bottom: 1px solid #1e1e3a; }
+  .card { border: 1px solid #1e1e3a; border-radius: 8px; padding: 11px 14px; margin-bottom: 6px; }
+  .cardrow { display: flex; align-items: flex-start; gap: 10px; }
+  .dnum { font-size: 11px; color: #6c6c9c; min-width: 28px; padding-top: 2px; }
+  .topic { font-size: 13px; color: #d0d0f0; line-height: 1.4; }
+  .srclabel { font-size: 10px; color: #5a7a5a; margin-top: 3px; }
+  .qscore { font-size: 11px; margin-top: 3px; }
+  .actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .btn { padding: 6px 10px; border-radius: 5px; font-size: 11px; white-space: nowrap; border: 1px solid; }
+  .study { background: #1a2a1a; border-color: #2a4a2a; color: #7aba7a; }
+  .read { background: #1a1a3a; border-color: #2a2a5a; color: #7070c0; }
+  .quiz { background: #1a1f3a; border-color: #2a3a6a; color: #90c0ff; }
+  .quiz.passed { background: #0f2a1a; border-color: #2a5a3a; color: #4ade80; }
+  .rest { font-size: 12px; color: #3a3a5a; }
+  .statbtn { background: #1e3a5f; border: none; color: #90c0ff; padding: 7px 14px; border-radius: 6px; font-size: 12px; }
+  .backbtn { background: none; border: 1px solid #1e1e3a; color: #6c6c9c; padding: 6px 14px; border-radius: 6px; font-size: 13px; }
+  .qhead { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+  .qprog { height: 3px; background: #13131f; border-radius: 2px; margin-bottom: 24px; overflow: hidden; }
+  .qprog > div { height: 100%; background: #3b5bdb; border-radius: 2px; transition: width .3s; }
+  .qtext { font-size: 17px; font-weight: 600; line-height: 1.6; margin-bottom: 24px; }
+  .opt { display: block; width: 100%; text-align: left; background: #13131f; border: 1px solid #1e1e3a; color: #b0b0d0; padding: 13px 16px; border-radius: 8px; font-size: 14px; line-height: 1.5; margin-bottom: 10px; transition: all .15s; }
+  .opt.correct { background: #0f2a1a; border-color: #4ade80; color: #4ade80; }
+  .opt.wrong { background: #2a0f0f; border-color: #f87171; color: #f87171; }
+  .feedback { padding: 10px 14px; border-radius: 6px; font-size: 13px; margin: 16px 0; border-left: 3px solid; }
+  .feedback.ok { background: #0a1f12; color: #4ade80; border-color: #4ade80; }
+  .feedback.no { background: #1f0a0a; color: #f59e0b; border-color: #f59e0b; }
+  .next { background: #3b5bdb; border: none; color: #fff; padding: 12px 28px; border-radius: 8px; font-size: 15px; font-weight: 600; }
+  .center { text-align: center; padding: 48px 0; max-width: 400px; margin: 0 auto; }
+  .bigicon { font-size: 56px; margin-bottom: 12px; }
+  .bigscore { font-size: 32px; font-weight: 700; }
+  .statgrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .statcell { background: #13131f; border: 1px solid #1e1e3a; border-radius: 10px; padding: 16px 12px; text-align: center; }
+  .statcell .v { font-size: 22px; font-weight: 700; color: #90c0ff; }
+  .statcell .l { font-size: 11px; color: #6c6c9c; margin-top: 4px; }
+  .wkstat { background: #13131f; border: 1px solid #1e1e3a; border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .hist { display: flex; justify-content: space-between; padding: 8px 12px; background: #13131f; border: 1px solid #1e1e3a; border-radius: 6px; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+// ---- Hindi/Hinglish source anchors ----
+var KN_STATS="https://www.youtube.com/playlist?list=PLTDARY42LDV6YHSRo669_uDDGmUEmQnDJ";
+var KN_ML="https://www.youtube.com/playlist?list=PLTDARY42LDV7WGmlzZtY-w9pemyPrKNUZ";
+var KN_PY="https://www.youtube.com/playlist?list=PLTDARY42LDV4qqiJd1Z1tShm3mp9-rP4v";
+var KN_E2E="https://www.youtube.com/playlist?list=PLTDARY42LDV7jzL_f68SY-eOQ9tY2lYvR";
+var CB_ML="https://www.youtube.com/playlist?list=PLPbgcxheSpE0aBsefANDYe2X_-tyJbBMr";
+function yt(q){return "https://www.youtube.com/results?search_query="+encodeURIComponent(q);}
+
+var WEEKS=[
+ {week:1,theme:"Statistics Foundation",days:[
+  {day:1,topic:"Probability basics: conditional probability, Bayes theorem",link:yt("bayes theorem conditional probability hindi"),src:"Hindi: Bayes/Probability",quiz:[
+   {q:"What does P(A|B) mean?",a:"Probability of A given B has occurred",o:["P(A) times P(B)","Probability of A given B has occurred","P(A) plus P(B)","P(A) divided by P(B)"]},
+   {q:"Bayes theorem relates posterior to:",a:"Prior x Likelihood / Evidence",o:["Prior only","Likelihood only","Prior x Likelihood / Evidence","Mean x Variance"]},
+   {q:"If P(A)=0.3, P(B)=0.4, independent, P(A and B)=?",a:"0.12",o:["0.7","0.12","0.34","0.1"]}]},
+  {day:2,topic:"Distributions: Normal, Binomial, Poisson",link:yt("normal binomial poisson distribution statistics hindi"),src:"Hindi: Distributions",quiz:[
+   {q:"Which distribution models number of events in a fixed time window?",a:"Poisson",o:["Normal","Binomial","Poisson","Exponential"]},
+   {q:"Binomial distribution requires:",a:"Fixed n, binary outcome, constant p",o:["Continuous outcome","Fixed n, binary outcome, constant p","Infinite trials","Known variance only"]},
+   {q:"Normal distribution is symmetric around:",a:"Mean",o:["Median only","Mode only","Mean","Zero always"]}]},
+  {day:3,topic:"Hypothesis testing: null hypothesis, p-value, Type I & II errors",link:yt("hypothesis testing p value type 1 type 2 error hindi"),src:"Hindi: Hypothesis Testing",quiz:[
+   {q:"Type I error is:",a:"Rejecting a true null hypothesis",o:["Accepting a false null","Rejecting a true null hypothesis","Failing to reject false null","None of these"]},
+   {q:"p-value < 0.05 means:",a:"Reject null at 5% significance level",o:["Null is definitely false","Reject null at 5% significance level","95% chance result is real","Effect size is large"]},
+   {q:"Type II error (beta) is related to:",a:"Statistical power (1-beta)",o:["Confidence interval","Statistical power (1-beta)","Sample size only","p-value directly"]}]},
+  {day:4,topic:"Confidence intervals, t-test, z-test",link:yt("confidence interval t test z test statistics hindi"),src:"Hindi: CI / t-test / z-test",quiz:[
+   {q:"Use z-test when:",a:"Population variance is known OR n > 30",o:["n < 10","Population variance is known OR n > 30","Data is non-normal","Comparing 3+ groups"]},
+   {q:"A 95% CI means:",a:"95% of such intervals contain the true parameter",o:["95% chance parameter is in this interval","95% of such intervals contain the true parameter","5% error in estimate","Parameter is 95% accurate"]},
+   {q:"Paired t-test is used when:",a:"Same subjects measured twice (before/after)",o:["Two independent groups","Same subjects measured twice (before/after)","More than 2 groups","Proportions are compared"]}]},
+  {day:5,topic:"Correlation vs Causation, Simpson's paradox",link:yt("correlation causation simpson paradox statistics hindi"),src:"Hindi: Correlation",quiz:[
+   {q:"Correlation coefficient r=0 means:",a:"No linear relationship",o:["No relationship of any kind","No linear relationship","Variables are independent","Negative correlation"]},
+   {q:"Simpson's paradox occurs when:",a:"Trend reverses when data is aggregated",o:["Sample size is too small","Trend reverses when data is aggregated","Variables are correlated","p-value is borderline"]},
+   {q:"Confounding variable causes:",a:"False correlation between two variables",o:["Higher variance","False correlation between two variables","Lower p-values","Smaller sample size needed"]}]},
+  {day:6,topic:"Review + Mock: Statistics",link:KN_STATS,src:"Krish Naik: Stats Playlist (Hindi)",quiz:[
+   {q:"In fraud detection, high recall means:",a:"Most actual frauds are caught",o:["Few false alarms","Most actual frauds are caught","Model is very precise","AUC is high"]},
+   {q:"Central Limit Theorem states:",a:"Sample means approach normal distribution as n increases",o:["Population is always normal","Sample means approach normal distribution as n increases","Large samples have no error","Variance decreases with n"]},
+   {q:"When variance is unknown and n=15, use:",a:"t-test",o:["z-test","Chi-square","t-test","ANOVA"]}]},
+  {day:7,topic:"REST DAY - Review weak areas from Week 1",link:null,src:null,quiz:[]}]},
+ {week:2,theme:"ML Core - Supervised Learning",days:[
+  {day:8,topic:"Linear Regression: assumptions, OLS, R-squared, multicollinearity",link:yt("linear regression machine learning hindi krish naik"),src:"Hindi: Linear Regression",quiz:[
+   {q:"VIF > 10 indicates:",a:"High multicollinearity",o:["Good model fit","High multicollinearity","Low variance","Overfitting"]},
+   {q:"R-squared = 0.85 means:",a:"85% of variance in Y is explained by X",o:["Model is 85% accurate","85% of variance in Y is explained by X","Error is 15%","85% predictions are correct"]},
+   {q:"Homoscedasticity assumption means:",a:"Residuals have constant variance",o:["Residuals are zero","Residuals have constant variance","Features are uncorrelated","Residuals are normally distributed"]}]},
+  {day:9,topic:"Logistic Regression: log-odds, sigmoid, decision boundary",link:yt("logistic regression machine learning hindi"),src:"Hindi: Logistic Regression",quiz:[
+   {q:"Sigmoid function output range is:",a:"0 to 1",o:["-1 to 1","0 to 1","0 to infinity","-infinity to infinity"]},
+   {q:"Log-odds (logit) is:",a:"log(p / 1-p)",o:["log(p)","log(1-p)","log(p / 1-p)","p / (1-p)"]},
+   {q:"Logistic regression loss function is:",a:"Binary cross-entropy",o:["MSE","MAE","Binary cross-entropy","Hinge loss"]}]},
+  {day:10,topic:"Decision Trees: Gini, entropy, pruning, depth",link:yt("decision tree gini entropy machine learning hindi"),src:"Hindi: Decision Trees",quiz:[
+   {q:"Gini impurity of a pure node is:",a:"0",o:["1","0.5","0","0.25"]},
+   {q:"Pruning in decision trees is used to:",a:"Reduce overfitting",o:["Increase depth","Reduce overfitting","Speed up training","Increase features"]},
+   {q:"Information gain is based on:",a:"Reduction in entropy",o:["Increase in Gini","Reduction in entropy","Increase in depth","Number of leaves"]}]},
+  {day:11,topic:"Random Forest: bagging, feature importance, OOB error",link:yt("random forest bagging machine learning hindi"),src:"Hindi: Random Forest",quiz:[
+   {q:"OOB (Out-of-Bag) error is:",a:"Error on samples not used in a tree's bootstrap",o:["Validation set error","Error on samples not used in a tree's bootstrap","Cross-validation error","Test set error"]},
+   {q:"Random Forest reduces variance by:",a:"Averaging predictions of many trees",o:["Using deeper trees","Averaging predictions of many trees","Using all features every split","Removing outliers"]},
+   {q:"Feature importance in RF is measured by:",a:"Mean decrease in impurity across trees",o:["Correlation with target","Mean decrease in impurity across trees","Coefficient magnitude","p-value"]}]},
+  {day:12,topic:"XGBoost: boosting, regularization, key hyperparams",link:yt("xgboost gradient boosting machine learning hindi"),src:"Hindi: XGBoost",quiz:[
+   {q:"Boosting differs from bagging in that it:",a:"Trains trees sequentially on residuals",o:["Uses more features","Trains trees sequentially on residuals","Trains trees in parallel","Uses deeper trees"]},
+   {q:"In XGBoost, 'lambda' controls:",a:"L2 regularization on leaf weights",o:["Learning rate","L2 regularization on leaf weights","Number of trees","Max depth"]},
+   {q:"Early stopping in XGBoost prevents:",a:"Overfitting by stopping when val loss stops improving",o:["Underfitting","Overfitting by stopping when val loss stops improving","Long training time only","High learning rate"]}]},
+  {day:13,topic:"Model Evaluation: Precision, Recall, F1, ROC-AUC, KS",link:yt("roc auc precision recall f1 score hindi"),src:"Hindi: ROC/AUC/Metrics",quiz:[
+   {q:"KS statistic measures:",a:"Max separation between fraud and non-fraud score distributions",o:["Model accuracy","Max separation between fraud and non-fraud score distributions","Feature importance","Correlation"]},
+   {q:"In fraud detection, you prioritize:",a:"Recall (catch more fraud even if some false alarms)",o:["Precision over everything","Recall (catch more fraud even if some false alarms)","Accuracy only","Specificity"]},
+   {q:"ROC-AUC of 0.5 means:",a:"Model is no better than random",o:["Perfect model","Model is no better than random","Model has 50% accuracy","Threshold is 0.5"]}]},
+  {day:14,topic:"REST DAY - Review Week 2 weak areas",link:CB_ML,src:"CodeBasics: ML Playlist (Hindi)",quiz:[]}]},
+ {week:3,theme:"ML Core - Feature Engineering & Selection",days:[
+  {day:15,topic:"Feature engineering for fraud: velocity, ratios, WOE, IV",link:yt("weight of evidence WOE information value IV credit hindi"),src:"Hindi: WOE / IV",quiz:[
+   {q:"Transaction velocity feature captures:",a:"Number of transactions in a time window",o:["Transaction amount","Number of transactions in a time window","Card type","Merchant category"]},
+   {q:"WOE encoding is used for:",a:"Converting categoricals for logistic regression/scorecard",o:["Tree models only","Converting categoricals for logistic regression/scorecard","Numerical normalization","Outlier removal"]},
+   {q:"IV > 0.5 indicates:",a:"Strong predictor",o:["Weak predictor","Medium predictor","Strong predictor","Useless variable"]}]},
+  {day:16,topic:"Handling missing values, outliers, class imbalance",link:yt("SMOTE imbalanced data handling missing values hindi"),src:"Hindi: Imbalance / SMOTE",quiz:[
+   {q:"SMOTE is used to:",a:"Oversample minority class synthetically",o:["Remove outliers","Oversample minority class synthetically","Undersample majority class","Normalize features"]},
+   {q:"For tree models, missing value imputation:",a:"Is less critical - trees can handle missing natively",o:["Is mandatory","Is less critical - trees can handle missing natively","Should always use mean","Requires MICE"]},
+   {q:"In fraud data, class imbalance is typically:",a:"Fraud is <1-5% of all transactions",o:["50-50 split","Fraud is <1-5% of all transactions","Fraud is 20%+","Balanced by default"]}]},
+  {day:17,topic:"Feature selection: RFE, SHAP, correlation filtering",link:yt("SHAP feature importance explainability hindi"),src:"Hindi: SHAP / Feature Selection",quiz:[
+   {q:"SHAP values explain:",a:"Individual prediction contribution of each feature",o:["Global feature importance only","Individual prediction contribution of each feature","Model accuracy","Feature correlations"]},
+   {q:"High correlation between two features means:",a:"One can often be dropped without loss",o:["Both must be kept","One can often be dropped without loss","Model will fail","Interactions are important"]},
+   {q:"RFE works by:",a:"Iteratively removing least important features",o:["Adding features one by one","Iteratively removing least important features","Clustering features","Using SHAP values only"]}]},
+  {day:18,topic:"Scaling, encoding, pipelines: when and why",link:yt("feature scaling encoding standardscaler hindi"),src:"Hindi: Scaling / Encoding",quiz:[
+   {q:"StandardScaler is essential for:",a:"Logistic regression, SVM, KNN - not needed for trees",o:["XGBoost","Logistic regression, SVM, KNN - not needed for trees","All models","Random Forest"]},
+   {q:"One-hot encoding risk with high cardinality:",a:"Dimensionality explosion",o:["Underfitting","Dimensionality explosion","Data leakage","Class imbalance"]},
+   {q:"Target encoding risk is:",a:"Data leakage if not done within CV folds",o:["Too slow","Data leakage if not done within CV folds","Only works for binary targets","Requires scaling after"]}]},
+  {day:19,topic:"Bias-Variance tradeoff, overfitting, underfitting",link:yt("bias variance tradeoff overfitting underfitting hindi"),src:"Hindi: Bias-Variance",quiz:[
+   {q:"High bias means:",a:"Model is too simple, underfitting",o:["Model is too complex","Model is too simple, underfitting","High variance","Overfitting"]},
+   {q:"Cross-validation is used to:",a:"Estimate generalization error on unseen data",o:["Speed up training","Estimate generalization error on unseen data","Feature selection only","Handle imbalance"]},
+   {q:"Regularization (L1/L2) reduces:",a:"Overfitting by penalizing large weights",o:["Underfitting","Overfitting by penalizing large weights","Training time","Data size needed"]}]},
+  {day:20,topic:"Scorecard building: WOE binning, scorecard points, PSI",link:yt("credit risk scorecard WOE binning PSI hindi"),src:"Hindi: Credit Scorecard",quiz:[
+   {q:"PSI > 0.25 means:",a:"Significant population shift - model needs review",o:["Model is stable","Minor shift","Significant population shift - model needs review","Feature is important"]},
+   {q:"Scorecard points are derived from:",a:"WOE values scaled to a point range",o:["Raw feature values","WOE values scaled to a point range","Coefficients only","RF importance"]},
+   {q:"Negative WOE for a bin means:",a:"That bin has more non-events (lower risk)",o:["Higher fraud rate in bin","That bin has more non-events (lower risk)","Bin should be removed","IV is negative"]}]},
+  {day:21,topic:"REST DAY - Review Week 3",link:null,src:null,quiz:[]}]},
+ {week:4,theme:"Fraud & Credit Risk Domain Deep-Dive",days:[
+  {day:22,topic:"Fraud detection strategies: rules vs ML vs hybrid",link:yt("fraud detection machine learning explained hindi"),src:"Hindi: Fraud Detection",quiz:[
+   {q:"Rule-based fraud systems are preferred when:",a:"Interpretability and compliance are critical",o:["Data is abundant","Interpretability and compliance are critical","Fraud patterns are complex","Speed is not needed"]},
+   {q:"Synthetic identity fraud involves:",a:"Combining real and fake data to create a new identity",o:["Stolen credit cards","Combining real and fake data to create a new identity","Account takeover","Phishing"]},
+   {q:"First-party fraud is:",a:"Borrower intentionally defaults with no intent to repay",o:["External hacker attack","Borrower intentionally defaults with no intent to repay","Identity theft","Card skimming"]}]},
+  {day:23,topic:"Credit risk: PD, LGD, EAD, expected loss",link:yt("PD LGD EAD expected loss credit risk explained hindi"),src:"Hinglish: PD LGD EAD",quiz:[
+   {q:"Expected Loss =",a:"PD x LGD x EAD",o:["PD + LGD","PD x LGD x EAD","LGD / EAD","PD x EAD"]},
+   {q:"PD models predict:",a:"Likelihood borrower defaults within 12 months",o:["Loss given default","Likelihood borrower defaults within 12 months","Exposure at default","Recovery rate"]},
+   {q:"LGD captures:",a:"Percentage of exposure lost after recovery",o:["Total loan amount","Percentage of exposure lost after recovery","Probability of default","Interest rate"]}]},
+  {day:24,topic:"Vintage analysis, roll rates, delinquency buckets",link:yt("vintage analysis roll rate DPD credit risk hinglish"),src:"Hinglish: Vintage / Roll Rate",quiz:[
+   {q:"Vintage analysis tracks:",a:"Default rates by loan origination cohort over time",o:["Feature importance over time","Default rates by loan origination cohort over time","Score distribution","Recovery rates only"]},
+   {q:"Roll rate analysis shows:",a:"Transition rates between DPD buckets (0-30-60-90)",o:["Feature correlations","Transition rates between DPD buckets (0-30-60-90)","Model drift","Fraud rate trends"]},
+   {q:"DPD stands for:",a:"Days Past Due",o:["Days Per Default","Days Past Due","Default Probability Distribution","Delinquency Per Dollar"]}]},
+  {day:25,topic:"Alternate data in credit: bureau, telecom, UPI, device",link:yt("alternate data credit scoring india UPI bureau hinglish"),src:"Hinglish: Alternate Data",quiz:[
+   {q:"Bureau thin-file applicants are:",a:"Borrowers with little or no credit history",o:["High-risk borrowers only","Borrowers with little or no credit history","Defaulters","NTC customers with high income"]},
+   {q:"UPI transaction data can indicate:",a:"Cash flow patterns, merchant behavior, spend habits",o:["Only income level","Cash flow patterns, merchant behavior, spend habits","Bureau score directly","Fraud probability only"]},
+   {q:"Device fingerprinting is used for:",a:"Identifying suspicious devices or device reuse",o:["Income verification","Identifying suspicious devices or device reuse","Bureau score enrichment","Address verification"]}]},
+  {day:26,topic:"Model monitoring: PSI, CSI, Gini decay, champion-challenger",link:yt("model monitoring PSI CSI model drift hindi"),src:"Hindi: Model Monitoring",quiz:[
+   {q:"CSI monitors:",a:"Stability of individual feature distributions over time",o:["Overall model score","Stability of individual feature distributions over time","Champion model performance","AUC only"]},
+   {q:"Gini decay signals:",a:"Model discriminating power is declining",o:["Data quality improved","Model discriminating power is declining","Population is stable","Feature importance increased"]},
+   {q:"Champion-challenger is used to:",a:"Test new model against live model in production",o:["Feature selection","Test new model against live model in production","Handle imbalance","Score binning"]}]},
+  {day:27,topic:"RBI guidelines relevant to credit and fraud models",link:"https://www.rbi.org.in/Scripts/NotificationUser.aspx",src:"RBI: Official Notifications",quiz:[
+   {q:"RBI Fair Practice Code requires:",a:"Transparent communication of credit decisions to borrowers",o:["Only PSI monitoring","Transparent communication of credit decisions to borrowers","Monthly model retraining","Bureau-only scoring"]},
+   {q:"Model explainability in BFSI is needed because:",a:"Regulators require justification for credit/fraud decisions",o:["It improves accuracy","Regulators require justification for credit/fraud decisions","It reduces compute cost","It is optional in India"]},
+   {q:"Adverse action notice is required when:",a:"Credit is denied - reasons must be communicated",o:["Loan is approved","Credit is denied - reasons must be communicated","Model is retrained","PSI exceeds 0.1"]}]},
+  {day:28,topic:"REST DAY - Review Week 4",link:null,src:null,quiz:[]}]},
+ {week:5,theme:"SQL + Python for DS Interviews",days:[
+  {day:29,topic:"SQL: Joins - INNER, LEFT, RIGHT, FULL",link:yt("sql joins inner left right full explained hindi"),src:"Hindi: SQL Joins",quiz:[
+   {q:"LEFT JOIN returns:",a:"All rows from left table, matched rows from right",o:["Only matched rows","All rows from left table, matched rows from right","All rows from both tables","Only right table rows"]},
+   {q:"FULL OUTER JOIN returns:",a:"All rows from both tables, NULLs where no match",o:["Only matched rows","Intersection only","All rows from both tables, NULLs where no match","Left table only"]},
+   {q:"CROSS JOIN produces:",a:"Cartesian product of both tables",o:["Only distinct rows","Cartesian product of both tables","Matched rows only","Aggregated result"]}]},
+  {day:30,topic:"SQL: Window functions - ROW_NUMBER, RANK, LAG, LEAD",link:yt("sql window functions row_number rank lag lead hindi"),src:"Hindi: SQL Window Functions",quiz:[
+   {q:"LAG() function is used to:",a:"Access previous row's value in ordered partition",o:["Skip rows","Access previous row's value in ordered partition","Rank rows","Aggregate values"]},
+   {q:"PARTITION BY in window functions:",a:"Resets the window calculation for each group",o:["Filters rows","Resets the window calculation for each group","Sorts the output","Removes duplicates"]},
+   {q:"ROW_NUMBER() vs RANK() difference:",a:"ROW_NUMBER is unique sequential, RANK skips on ties",o:["Same behavior","ROW_NUMBER is unique sequential, RANK skips on ties","RANK is always unique","ROW_NUMBER skips ties"]}]},
+  {day:31,topic:"SQL: CTEs, subqueries, aggregations, CASE statements",link:yt("sql cte subquery case statement hindi"),src:"Hindi: SQL CTE / Subquery",quiz:[
+   {q:"CTE advantage over subquery:",a:"More readable, can be referenced multiple times",o:["Always faster","More readable, can be referenced multiple times","Stores data permanently","Avoids joins"]},
+   {q:"HAVING vs WHERE difference:",a:"HAVING filters after GROUP BY, WHERE before",o:["Same thing","HAVING filters after GROUP BY, WHERE before","WHERE is used with aggregates","HAVING only works with COUNT"]},
+   {q:"To find 2nd highest salary:",a:"DENSE_RANK() or subquery with MAX",o:["MAX(salary)","DENSE_RANK() or subquery with MAX","TOP 2 only","LIMIT 1 OFFSET 1 always"]}]},
+  {day:32,topic:"Python: Pandas - merge, groupby, pivot, apply",link:KN_PY,src:"Krish Naik: Python Playlist (Hindi)",quiz:[
+   {q:"df.groupby('c').agg({'v':'sum'}) equals:",a:"SQL GROUP BY c with SUM(v)",o:["SQL WHERE clause","SQL GROUP BY c with SUM(v)","SQL HAVING clause","SQL JOIN"]},
+   {q:"pd.merge(d1,d2,on='id',how='left') is:",a:"Left join on column 'id'",o:["Inner join","Left join on column 'id'","Full outer join","Cross join"]},
+   {q:"apply() vs vectorized: which is faster?",a:"Vectorized (built-in Pandas/NumPy)",o:["apply() always","Vectorized (built-in Pandas/NumPy)","Same speed","Depends on data type only"]}]},
+  {day:33,topic:"Python: Scikit-learn pipeline, cross-validation, GridSearchCV",link:yt("cross validation gridsearchcv sklearn pipeline hindi"),src:"Hindi: CV / GridSearchCV",quiz:[
+   {q:"sklearn Pipeline is used to:",a:"Chain preprocessing+model, prevent data leakage",o:["Speed up training","Chain preprocessing+model, prevent data leakage","Handle missing values only","Replace cross-validation"]},
+   {q:"StratifiedKFold is preferred for:",a:"Imbalanced classification problems",o:["Regression tasks","Imbalanced classification problems","Time series data","Large datasets only"]},
+   {q:"Data leakage in CV happens when:",a:"Test fold info influences training preprocessing",o:["Model is too complex","Test fold info influences training preprocessing","Sample size is small","Features are correlated"]}]},
+  {day:34,topic:"Python: SHAP, model explainability for BFSI",link:yt("shap values model explainability python hindi"),src:"Hindi: SHAP Explainability",quiz:[
+   {q:"SHAP summary plot shows:",a:"Feature importance and impact direction across samples",o:["Single prediction explanation","Feature importance and impact direction across samples","Correlation matrix","Score distribution"]},
+   {q:"LIME differs from SHAP in that:",a:"LIME approximates locally with a simpler model",o:["LIME is more accurate globally","LIME approximates locally with a simpler model","Both are identical","SHAP is only for trees"]},
+   {q:"For a denied loan, SHAP helps by:",a:"Showing which features drove the decision",o:["Retraining the model","Showing which features drove the decision","Increasing approval chances","Calculating LGD"]}]},
+  {day:35,topic:"REST DAY - Review Week 5",link:null,src:null,quiz:[]}]},
+ {week:6,theme:"System Design + Deployment Concepts",days:[
+  {day:36,topic:"ML system design: real-time vs batch scoring, latency",link:yt("machine learning system design real time batch hindi"),src:"Hindi: ML System Design",quiz:[
+   {q:"Real-time scoring is needed when:",a:"Decision must be made at transaction time",o:["Monthly reporting","Decision must be made at transaction time","Model retraining","Feature engineering"]},
+   {q:"Batch scoring is preferred when:",a:"Decisions can be pre-computed (risk tiers)",o:["API latency < 100ms required","Decisions can be pre-computed (risk tiers)","Fraud detection always","Small datasets only"]},
+   {q:"p99 latency means:",a:"99% of requests complete within this time",o:["Average response time","99% of requests complete within this time","Maximum latency","Median latency"]}]},
+  {day:37,topic:"Feature stores, data pipelines, model registries",link:yt("feature store mlops model registry explained hindi"),src:"Hindi: Feature Stores / MLOps",quiz:[
+   {q:"A feature store solves:",a:"Consistency between training and serving features",o:["Model accuracy","Consistency between training and serving features","Data labeling","Hyperparameter tuning"]},
+   {q:"Train-serve skew is:",a:"Different feature values at training vs production",o:["Overfitting","Different feature values at training vs production","Data imbalance","Model drift"]},
+   {q:"Model registry is used for:",a:"Versioning, tracking, deploying ML models",o:["Feature computation","Versioning, tracking, deploying ML models","Data storage","API gateway"]}]},
+  {day:38,topic:"A/B testing for models, shadow deployment, canary rollout",link:yt("ab testing shadow canary deployment machine learning hindi"),src:"Hindi: A/B / Canary",quiz:[
+   {q:"Shadow deployment means:",a:"New model runs alongside old without affecting decisions",o:["Replacing old model instantly","New model runs alongside old without affecting decisions","Testing on historical data","Running model in batch only"]},
+   {q:"Canary rollout involves:",a:"Gradually routing traffic to new model",o:["Full traffic switch","Gradually routing traffic to new model","A/B test with 50/50 split only","Shadow mode always"]},
+   {q:"Statistical significance in A/B test ensures:",a:"Observed difference is unlikely due to chance",o:["Experiment ran long enough","Observed difference is unlikely due to chance","Sample size is large","Model is better"]}]},
+  {day:39,topic:"Practical: Fraud model end-to-end mental walkthrough",link:KN_E2E,src:"Krish Naik: End-to-End ML (Hindi)",quiz:[
+   {q:"For loan fraud at origination, which label?",a:"Default/fraud within 12 months of disbursement",o:["30 DPD at any point","Default/fraud within 12 months of disbursement","Bureau score < 600","High EMI bounce rate"]},
+   {q:"First step after raw loan application data:",a:"EDA - distributions, missing values, target rate",o:["Train model immediately","EDA - distributions, missing values, target rate","Deploy to production","Feature scaling"]},
+   {q:"Model validation holdout should be:",a:"Out-of-time sample (different period than training)",o:["Random 20% split","Out-of-time sample (different period than training)","Same period as training","Stratified only"]}]},
+  {day:40,topic:"Cloud basics: S3, Lambda, EC2 - what DS needs to know",link:yt("aws s3 lambda ec2 data science basics hindi"),src:"Hindi: AWS for DS",quiz:[
+   {q:"S3 is best described as:",a:"Object storage for files, models, data",o:["Compute service","Object storage for files, models, data","Database","API gateway"]},
+   {q:"Lambda is used for:",a:"Serverless execution - ideal for real-time scoring",o:["Storing large datasets","Serverless execution - ideal for real-time scoring","Training large models","SQL queries"]},
+   {q:"EC2 is preferred for:",a:"Long-running training jobs needing dedicated compute",o:["Serverless tasks","Long-running training jobs needing dedicated compute","Object storage","Monitoring only"]}]},
+  {day:41,topic:"Docker + API basics: what interviewers expect",link:yt("docker fastapi machine learning model deploy hindi"),src:"Hindi: Docker / FastAPI",quiz:[
+   {q:"Docker container advantage for ML models:",a:"Consistent environment across dev, test, prod",o:["Faster model training","Consistent environment across dev, test, prod","Better accuracy","Eliminates need for monitoring"]},
+   {q:"REST API for model scoring typically uses:",a:"POST with JSON input, JSON prediction response",o:["GET request always","POST with JSON input, JSON prediction response","SQL query","FTP upload"]},
+   {q:"FastAPI vs Flask for ML serving:",a:"FastAPI is faster with async support and auto-docs",o:["Flask is always better","FastAPI is faster with async support and auto-docs","Same performance","Flask has better docs"]}]},
+  {day:42,topic:"REST DAY - Review Week 6",link:null,src:null,quiz:[]}]},
+ {week:7,theme:"Interview Practice - Business Cases + Behavioural",days:[
+  {day:43,topic:"How to answer: 'Tell me about yourself' for DS roles",link:yt("data science interview introduction tell me about yourself hindi"),src:"Hindi: DS Interview Intro",quiz:[
+   {q:"Best opening for a DS interview intro:",a:"Domain + problem type + impact, then journey briefly",o:["Start with graduation year","Domain + problem type + impact, then journey briefly","List all companies worked at","Mention hobbies first"]},
+   {q:"Your USP for Mastercard/Amex interview:",a:"Fraud/risk domain depth + business problem solving + banking",o:["MBA degree","Fraud/risk domain depth + business problem solving + banking","7 years total experience","Python skills only"]},
+   {q:"Non-traditional background framing:",a:"BPO gave customer insight that informs fraud models",o:["Avoid mentioning BPO","BPO gave customer insight that informs fraud models","Only mention tech years","Apologize for late start"]}]},
+  {day:44,topic:"Business case: design a fraud detection system from scratch",link:yt("machine learning system design interview fraud hindi"),src:"Hindi: ML Case Interview",quiz:[
+   {q:"First question to ask in any fraud case:",a:"What type of fraud? What stage? Acceptable FPR?",o:["What algorithm to use","What type of fraud? What stage? Acceptable FPR?","How big is the dataset","What is the reward"]},
+   {q:"Precision-Recall tradeoff in fraud - approach:",a:"High recall to catch fraud, manage precision via thresholds",o:["Always maximize precision","High recall to catch fraud, manage precision via thresholds","Always maximize accuracy","Maximize AUC only"]},
+   {q:"How to handle concept drift in fraud models:",a:"Retraining, PSI monitoring, champion-challenger",o:["Retrain once a year","Retraining, PSI monitoring, champion-challenger","Use rule-based only","Add more features"]}]},
+  {day:45,topic:"Business case: credit risk scorecard from scratch",link:yt("credit risk scorecard model building interview hinglish"),src:"Hinglish: Scorecard Case",quiz:[
+   {q:"Application score vs behavioral score:",a:"Application = at origination; Behavioral = in-life",o:["Same thing","Application = at origination; Behavioral = in-life","Behavioral is at origination","Application uses ML only"]},
+   {q:"Why scorecard (logistic+WOE) vs black-box ML?",a:"Interpretability, compliance, easy threshold tuning",o:["Higher AUC always","Interpretability, compliance, easy threshold tuning","Faster to build","Works without data"]},
+   {q:"Sample definition for a credit risk model:",a:"Loans in window X, observed 12 months, exclude indeterminate",o:["All historical data","Loans in window X, observed 12 months, exclude indeterminate","Only defaulters","Random 10% sample"]}]},
+  {day:46,topic:"Behavioural: STAR method - 5 stories from your work",link:yt("STAR method interview answers hindi"),src:"Hindi: STAR Method",quiz:[
+   {q:"STAR stands for:",a:"Situation, Task, Action, Result",o:["Strategy, Tactic, Action, Review","Situation, Task, Action, Result","Scope, Timeline, Approach, Result","System, Test, Analyze, Report"]},
+   {q:"Best STAR story for 'handling ambiguity':",a:"When you defined the problem yourself with limited guidance",o:["When you followed instructions exactly","When you defined the problem yourself with limited guidance","When project went perfectly","When team was large"]},
+   {q:"Quantify your impact by:",a:"Decline rate change, fraud caught, approval rate, cost saved",o:["Number of features built","Decline rate change, fraud caught, approval rate, cost saved","Lines of code written","Models trained"]}]},
+  {day:47,topic:"Mock: Statistics + ML rapid-fire",link:yt("data science interview questions answers machine learning hindi"),src:"Hindi: DS Interview Q&A",quiz:[
+   {q:"AUC-ROC is threshold-independent. True/False?",a:"True",o:["False","True","Only for binary","Depends on model"]},
+   {q:"L1 regularization does what L2 doesn't?",a:"Produces sparse models (coefficients to zero)",o:["Reduces bias","Produces sparse models (coefficients to zero)","Increases variance","Works only for trees"]},
+   {q:"Random Forest vs XGBoost - when prefer RF?",a:"When speed/robustness matter more than last % AUC",o:["Always prefer XGBoost","When speed/robustness matter more than last % AUC","For time series only","RF has higher AUC always"]}]},
+  {day:48,topic:"Mock: SQL + Python rapid-fire + domain questions",link:yt("sql interview questions answers data analyst hindi"),src:"Hindi: SQL Interview Q&A",quiz:[
+   {q:"Customers in Jan but not Feb - SQL approach:",a:"LEFT JOIN Jan to Feb WHERE Feb.id IS NULL",o:["INNER JOIN both months","LEFT JOIN Jan to Feb WHERE Feb.id IS NULL","UNION of both months","CROSS JOIN then filter"]},
+   {q:"Fastest way to apply function to pandas column:",a:"Vectorized operations - avoid apply()",o:["apply(lambda x: ...)","Vectorized operations - avoid apply()","for loop over rows","map() always"]},
+   {q:"PSI=0.32 on deployed model. Next step:",a:"Investigate score shift, check if retraining needed",o:["Ignore it","Investigate score shift, check if retraining needed","Immediately retrain","Disable model"]}]},
+  {day:49,topic:"REST DAY - Review Week 7",link:null,src:null,quiz:[]}]},
+ {week:8,theme:"Final Stretch - Consolidation + Mock Interviews",days:[
+  {day:50,topic:"Full mock: Statistics + ML (30 min timed quiz)",link:yt("data science mock interview machine learning hindi"),src:"Hindi: Mock Interview",quiz:[
+   {q:"What is the curse of dimensionality?",a:"As features increase, data gets sparse, distance breaks down",o:["More features always help","As features increase, data gets sparse, distance breaks down","High VIF problem","Model trains slower only"]},
+   {q:"Precision-recall tradeoff in one line:",a:"More precision usually means less recall - tune threshold by cost",o:["They always move together","More precision usually means less recall - tune threshold by cost","Recall is always more important","Precision matters only at high AUC"]},
+   {q:"Why is accuracy bad for fraud detection?",a:"Imbalance makes 99% accuracy trivial by predicting no fraud",o:["AUC is always used instead","Imbalance makes 99% accuracy trivial by predicting no fraud","Accuracy is actually fine","Only for small datasets"]}]},
+  {day:51,topic:"Full mock: Domain case study - Mastercard fraud scenario",link:"https://www.glassdoor.co.in/Interview/Mastercard-Data-Scientist-Interview-Questions-EI_IE7195.0,10_KO11,25.htm",src:"Glassdoor: Mastercard DS (Eng)",quiz:[
+   {q:"Mastercard would likely ask you to design for:",a:"Real-time card transaction fraud at low latency",o:["Batch credit risk monthly","Real-time card transaction fraud at low latency","Bureau score only","Insurance fraud"]},
+   {q:"Key features for card transaction fraud:",a:"Velocity, location mismatch, MCC, time, device, anomaly",o:["Income and age only","Velocity, location mismatch, MCC, time, device, anomaly","Bureau score only","DPD history"]},
+   {q:"Your strongest differentiation for Mastercard:",a:"Fraud rule engines + hybrid model + banking domain depth",o:["MBA degree","Fraud rule engines + hybrid model + banking domain depth","Python certifications","Number of models built"]}]},
+  {day:52,topic:"Salary negotiation + offer evaluation framework",link:yt("salary negotiation tips india job offer hindi"),src:"Hindi: Salary Negotiation",quiz:[
+   {q:"Best time to discuss expected salary:",a:"After you have an offer - or when directly asked",o:["In first round always","After you have an offer - or when directly asked","Before applying","During HR screening only"]},
+   {q:"Your anchor for negotiation should be:",a:"38-40 LPA with rationale, target 32-36 LPA",o:["25 LPA","38-40 LPA with rationale, target 32-36 LPA","Current CTC + 10%","Match their band exactly"]},
+   {q:"How to justify a 75%+ hike ask:",a:"Market rate + domain premium + demonstrated impact",o:["Say you need it","Market rate + domain premium + demonstrated impact","Reference years of experience only","Refuse to give a number"]}]},
+  {day:53,topic:"Weak area focused review (based on your quiz scores)",link:KN_ML,src:"Krish Naik: ML Playlist (Hindi)",quiz:[
+   {q:"Isolation Forest is used for:",a:"Anomaly/fraud detection - isolates outliers faster",o:["Classification only","Anomaly/fraud detection - isolates outliers faster","Time series forecasting","Clustering"]},
+   {q:"Gradient in gradient boosting refers to:",a:"Gradient of the loss - each tree fits residual gradient",o:["Learning rate","Gradient of the loss - each tree fits residual gradient","Feature gradient","Data gradient"]},
+   {q:"Bagging vs boosting key difference:",a:"Bagging: parallel, reduces variance. Boosting: sequential, reduces bias",o:["Same algorithm","Bagging: parallel, reduces variance. Boosting: sequential, reduces bias","Boosting is always better","Bagging is sequential"]}]},
+  {day:54,topic:"Questions TO ASK interviewers at Mastercard/Amex/JPMC",link:yt("best questions to ask interviewer job interview hindi"),src:"Hindi: Questions to Ask",quiz:[
+   {q:"Best question about the team:",a:"What does the model lifecycle look like here, problem to production?",o:["What is the salary band?","What does the model lifecycle look like here, problem to production?","How many holidays?","How many people on team?"]},
+   {q:"Question that signals strategic thinking:",a:"How do you balance rule-based and ML in your fraud stack?",o:["What tech stack do you use?","How do you balance rule-based and ML in your fraud stack?","Do you use Python?","What is the team size?"]},
+   {q:"Closing question that differentiates:",a:"Anything about my background that gives you pause?",o:["When will I hear back?","Anything about my background that gives you pause?","Can I work from home?","What is the bonus?"]}]},
+  {day:55,topic:"Mock full interview simulation - 45 min walkthrough",link:yt("data science interview preparation full hindi"),src:"Hindi: Full Interview Prep",quiz:[
+   {q:"Explain XGBoost to a non-technical stakeholder:",a:"Trees each correcting the previous one's mistakes",o:["It's just a neural network","Trees each correcting the previous one's mistakes","It's a regression model","It uses GPU to learn faster"]},
+   {q:"Model biased against a demographic - what do you do?",a:"Audit fairness metrics, segment analysis, consult compliance, mitigate",o:["Ignore if AUC is good","Audit fairness metrics, segment analysis, consult compliance, mitigate","Retrain with more data only","Use a different model type"]},
+   {q:"Gini drops 65 to 48 post-deployment. What do you do?",a:"Check PSI, feature distributions, pipeline, evaluate retraining",o:["Redeploy same model","Check PSI, feature distributions, pipeline, evaluate retraining","Increase threshold only","Ignore - normal variation"]}]},
+  {day:56,topic:"REST + Reflection: What am I still not confident about?",link:null,src:null,quiz:[]},
+  {day:57,topic:"Deep-dive: your single weakest area (from quiz history)",link:KN_ML,src:"Krish Naik: ML Playlist (Hindi)",quiz:[]},
+  {day:58,topic:"Mock: Behavioural round - 5 STAR stories back to back",link:yt("STAR method interview answers hindi"),src:"Hindi: STAR Method",quiz:[]},
+  {day:59,topic:"Final review: all topic summaries in one session",link:KN_E2E,src:"Krish Naik: End-to-End ML (Hindi)",quiz:[]},
+  {day:60,topic:"Day 60: Light review only. You're ready.",link:null,src:null,quiz:[]}]}
+];
+
+var KEY="ds_prep_app_v1";
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||{};}catch(e){return {};}}
+function save(p){try{localStorage.setItem(KEY,JSON.stringify(p));}catch(e){}}
+var progress=load();
+var state={view:"curriculum",day:null,qi:0,sel:null,score:0,done:false};
+var allDays=[];WEEKS.forEach(function(w){w.days.forEach(function(d){allDays.push(d);});});
+var totalQuiz=allDays.filter(function(d){return d.quiz.length>0;}).length;
+
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function stats(){
+ var studied=Object.keys(progress).filter(function(k){return progress[k]&&progress[k].studied;}).length;
+ var qd=Object.keys(progress).filter(function(k){return progress[k]&&progress[k].quizScore!==undefined;});
+ var avg=qd.length?Math.round(qd.reduce(function(a,k){return a+progress[k].quizScore;},0)/qd.length):0;
+ return {studied:studied,quizzed:qd.length,avg:avg};
+}
+function dayStatus(d){
+ var p=progress[d.day];
+ if(!p)return "pending";
+ if(p.quizScore!==undefined)return p.quizScore>=67?"passed":"review";
+ if(p.studied)return "studied";
+ return "pending";
+}
+
+function render(){
+ var el=document.getElementById("app");
+ if(state.view==="quiz")el.innerHTML=renderQuiz();
+ else if(state.view==="stats")el.innerHTML=renderStats();
+ else el.innerHTML=renderCurriculum();
+ window.scrollTo(0,0);
+}
+
+function renderCurriculum(){
+ var s=stats();
+ var h="";
+ h+="<div class='eyebrow'>Santosh - DS Interview Prep - Hindi sources</div>";
+ h+="<div class='row'><h1>60-Day Curriculum</h1><button class='statbtn' onclick='go(\"stats\")'>Stats &rarr;</button></div>";
+ h+="<div class='bar'><div style='width:"+(s.studied/60*100)+"%'></div></div>";
+ h+="<div class='meta'><span>"+s.studied+"/60 studied</span><span>"+s.quizzed+" quizzes</span><span style='color:"+(s.avg>=67?'#4ade80':'#f59e0b')+"'>avg "+s.avg+"%</span></div>";
+ h+="<div class='legend'><span style='color:#4ade80'>&#10003; Passed</span><span style='color:#f59e0b'>! Review</span><span style='color:#90c0ff'>&#128214; Studied</span><span style='color:#444'>&middot; Pending</span></div>";
+ WEEKS.forEach(function(w){
+  h+="<div class='weekhdr'>Week "+w.week+" &mdash; "+esc(w.theme)+"</div>";
+  w.days.forEach(function(d){
+   var st=dayStatus(d);var p=progress[d.day];
+   var isRest=d.quiz.length===0&&!d.link;
+   var bg=st==="passed"?"#0d1f14":st==="review"?"#1f0d0d":st==="studied"?"#0d1428":"#13131f";
+   var bc=st==="passed"?"#1a3a22":st==="review"?"#3a1a1a":"#1e1e3a";
+   h+="<div class='card' style='background:"+bg+";border-color:"+bc+"'><div class='cardrow'>";
+   h+="<div class='dnum'>D"+d.day+"</div>";
+   h+="<div style='flex:1'><div class='topic'>"+esc(d.topic)+"</div>";
+   if(d.src)h+="<div class='srclabel'>"+esc(d.src)+"</div>";
+   if(p&&p.quizScore!==undefined)h+="<div class='qscore' style='color:"+(p.quizScore>=67?'#4ade80':'#f59e0b')+"'>Quiz: "+p.quizScore+"%</div>";
+   h+="</div><div class='actions'>";
+   if(d.link)h+="<a class='btn study' href='"+d.link+"' target='_blank' rel='noopener'>Study &rarr;</a>";
+   if(!isRest&&!(p&&p.studied))h+="<button class='btn read' onclick='markRead("+d.day+")'>Read &#10003;</button>";
+   if(d.quiz.length>0)h+="<button class='btn quiz"+(st==="passed"?" passed":"")+"' onclick='startQuiz("+d.day+")'>"+(p&&p.quizScore!==undefined?"Retry":"Quiz")+"</button>";
+   if(isRest)h+="<span class='rest'>REST</span>";
+   h+="</div></div></div>";
+  });
+ });
+ return h;
+}
+
+function renderQuiz(){
+ var d=allDays.filter(function(x){return x.day===state.day;})[0];
+ if(state.done){
+  var pct=Math.round(state.score/d.quiz.length*100);
+  var ok=pct>=67;
+  return "<div class='center'><div class='bigicon'>"+(ok?"&#10003;":"&#9888;")+"</div>"+
+   "<div class='bigscore' style='color:"+(ok?'#4ade80':'#f59e0b')+"'>"+state.score+"/"+d.quiz.length+"</div>"+
+   "<div style='color:#6c6c9c;margin:4px 0 8px'>"+pct+"%</div>"+
+   "<div style='color:"+(ok?'#4ade80':'#f59e0b')+";font-size:14px;margin-bottom:28px'>"+(ok?"Good. Move on.":"Review this topic again.")+"</div>"+
+   "<button class='next' onclick='go(\"curriculum\")'>Back to Curriculum</button></div>";
+ }
+ var q=d.quiz[state.qi];var rev=state.sel!==null;
+ var h="<div class='qhead'><button class='backbtn' onclick='go(\"curriculum\")'>&larr; Back</button><span style='color:#6c6c9c;font-size:13px'>Day "+d.day+" &middot; Q"+(state.qi+1)+"/"+d.quiz.length+"</span></div>";
+ h+="<div class='qprog'><div style='width:"+(state.qi/d.quiz.length*100)+"%'></div></div>";
+ h+="<div class='qtext'>"+esc(q.q)+"</div>";
+ q.o.forEach(function(opt){
+  var cls="opt";
+  if(rev&&opt===q.a)cls+=" correct";
+  else if(rev&&opt===state.sel&&opt!==q.a)cls+=" wrong";
+  h+="<button class='"+cls+"' onclick='answer("+JSON.stringify(opt).replace(/'/g,"&#39;")+")'>"+esc(opt)+"</button>";
+ });
+ if(rev){
+  var ok=state.sel===q.a;
+  h+="<div class='feedback "+(ok?"ok":"no")+"'>"+(ok?"Correct.":"Answer: "+esc(q.a))+"</div>";
+  h+="<button class='next' onclick='nextQ()'>"+(state.qi+1>=d.quiz.length?"See Results":"Next &rarr;")+"</button>";
+ }
+ return h;
+}
+
+function renderStats(){
+ var s=stats();
+ var h="<div class='qhead'><button class='backbtn' onclick='go(\"curriculum\")'>&larr; Back</button><span style='color:#6c6c9c;font-size:14px'>Progress Report</span></div>";
+ h+="<div class='statgrid'>";
+ h+="<div class='statcell'><div class='v'>"+s.studied+"/60</div><div class='l'>Days Studied</div></div>";
+ h+="<div class='statcell'><div class='v'>"+s.quizzed+"/"+totalQuiz+"</div><div class='l'>Quizzes Done</div></div>";
+ h+="<div class='statcell'><div class='v'>"+s.avg+"%</div><div class='l'>Avg Score</div></div></div>";
+ WEEKS.forEach(function(w){
+  var days=w.days.filter(function(d){return d.quiz.length>0;});
+  var sc=days.map(function(d){return progress[d.day]?progress[d.day].quizScore:undefined;}).filter(function(x){return x!==undefined;});
+  var avg=sc.length?Math.round(sc.reduce(function(a,b){return a+b;},0)/sc.length):null;
+  h+="<div class='wkstat'><div class='row' style='align-items:center'><div><span style='color:#6c6c9c;font-size:12px'>Week "+w.week+" &middot; </span><span style='font-size:13px'>"+esc(w.theme)+"</span></div>";
+  h+="<div style='text-align:right'><div style='font-size:13px;font-weight:600;color:"+(avg>=67?'#4ade80':avg!==null?'#f59e0b':'#6c6c9c')+"'>"+(avg!==null?avg+"%":"&mdash;")+"</div><div style='font-size:11px;color:#6c6c9c'>"+sc.length+"/"+days.length+"</div></div></div>";
+  h+="<div class='bar' style='margin-top:10px'><div style='width:"+(sc.length/days.length*100)+"%;background:"+(avg>=67?'#4ade80':'#3b5bdb')+"'></div></div></div>";
+ });
+ var hist=allDays.filter(function(d){return d.quiz.length>0&&progress[d.day]&&progress[d.day].quizScore!==undefined;});
+ if(hist.length){
+  h+="<div style='color:#6c6c9c;font-size:12px;margin:20px 0 10px'>Score History</div>";
+  hist.forEach(function(d){
+   var sc=progress[d.day].quizScore;
+   h+="<div class='hist'><span style='font-size:12px;color:#9090b0'>D"+d.day+": "+esc(d.topic.slice(0,34))+(d.topic.length>34?"...":"")+"</span><span style='font-size:13px;font-weight:600;color:"+(sc>=67?'#4ade80':'#f59e0b')+"'>"+sc+"%</span></div>";
+  });
+ }
+ return h;
+}
+
+function go(v){state.view=v;render();}
+function markRead(day){progress[day]=progress[day]||{};progress[day].studied=true;save(progress);render();}
+function startQuiz(day){state.view="quiz";state.day=day;state.qi=0;state.sel=null;state.score=0;state.done=false;render();}
+function answer(opt){if(state.sel!==null)return;state.sel=opt;render();}
+function nextQ(){
+ var d=allDays.filter(function(x){return x.day===state.day;})[0];
+ if(state.sel===d.quiz[state.qi].a)state.score++;
+ if(state.qi+1>=d.quiz.length){
+  var pct=Math.round(state.score/d.quiz.length*100);
+  progress[d.day]=progress[d.day]||{};progress[d.day].studied=true;progress[d.day].quizScore=pct;save(progress);
+  state.done=true;
+ }else{state.qi++;state.sel=null;}
+ render();
+}
+render();
+</script>
+</body>
+</html>
